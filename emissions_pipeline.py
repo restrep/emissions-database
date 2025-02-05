@@ -30,9 +30,19 @@ def create_database():
     conn.close()
     print(f"Database {DB_NAME} created!")
 
-
 def create_tables():
-    engine = create_engine(f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}')
+    conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD, host=DB_HOST, port=DB_PORT)
+    print(f"Connected to database {DB_NAME}")
+    with open("create_emissions_tables.sql", "r") as file:
+        sql = file.read()
+    with conn.cursor() as cursor:
+        cursor.execute(sql)
+    conn.commit()
+    print("Tables created successfully!")
+
+
+def create_tables2():
+    #engine = create_engine(f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}')
     print(f"Connection string: {engine.url}") #Print the connection string
     with engine.connect() as connection:
         with open('create_emissions_tables.sql', 'r') as sql_file:
@@ -91,3 +101,17 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+    """
+    Different number of columns  -> source 1 has 12 others 13 -> Sector-Category vs Sector and Category
+    Different naming:  
+        Emmision (kgCO2e) (S1) vs kgCO2e (S2, S3)
+        LCA (S3) vs Life Cylce Assesment (S1, S2)
+        Year Valid From (S3) vs Validity Year (S2)   -> We assume they mean the same
+        Region (S3) vs Validity Region (S1, S2)
+
+    Activity jname can have duplicated values
+
+
+    """
