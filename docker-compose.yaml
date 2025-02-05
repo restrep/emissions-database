@@ -1,0 +1,22 @@
+services:
+  pgdatabase:
+    # this will also be the name of the host in pgadmin
+    image: postgres:13
+    environment:
+      # this are the variables to enter in pgadmin so it connects to postgres
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=emissions_db
+    volumes:
+      - "./emissions_db:/var/lib/postgresql/data:rw"
+    ports:
+      - "5432:5432"
+  pgadmin:
+    image: dpage/pgadmin4
+    volumes:
+      - "./data_pgadmin:/var/lib/pgadmin:rw"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=root
+    ports:
+      - "8080:80"
