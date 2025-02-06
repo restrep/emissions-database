@@ -5,7 +5,8 @@ from psycopg2.extras import execute_values
 from sqlalchemy import create_engine, text
 import os
 import warnings
-warnings.simplefilter(action='ignore', category=FutureWarning)
+
+warnings.simplefilter(action="ignore", category=FutureWarning)
 pd.set_option("future.no_silent_downcasting", True)
 
 
@@ -17,9 +18,23 @@ DB_HOST = "pgdatabase"
 DB_PORT = "5432"
 
 # Standardize column names
-STANDARD_COLUMNS = ['activity_name', 'sector', 'category', 'unit', 'kgco2e', 'kgco2', 'kgch4', 'kgn2o',
-       'assesment_report', 'scope', 'lca', 'validity_year',
-       'region', 'source', 'file_type']
+STANDARD_COLUMNS = [
+    "activity_name",
+    "sector",
+    "category",
+    "unit",
+    "kgco2e",
+    "kgco2",
+    "kgch4",
+    "kgn2o",
+    "assesment_report",
+    "scope",
+    "lca",
+    "validity_year",
+    "region",
+    "source",
+    "file_type",
+]
 
 paths = ["data-raw/S1/File 1-1.xlsx", "data-raw/S2/File 2-1.csv", "data-raw/S3/File 3-1.xlsx"]
 
@@ -85,9 +100,8 @@ def read_and_clean_data(paths_to_data):
         # clean strings to avoid duplicates like Transport and transport
         for column in ["sector", "category", "unit", "scope", "lca"]:  # Open question: activity_name ????
             df[column] = df[column].apply(lambda x: str(x).lower().rstrip())
-
         # rounding
-         df[['kgco2e', 'kgco2', 'kgch4', 'kgn2o']] = df[['kgco2e', 'kgco2', 'kgch4', 'kgn2o']].round(5)
+        df[["kgco2e", "kgco2", "kgch4", "kgn2o"]] = df[["kgco2e", "kgco2", "kgch4", "kgn2o"]].round(5)
         # clean missing values
         df.replace(["unknown", "Unknown"], None, inplace=True)
         df.replace(["not_supplied", "not-supplied"], np.nan, inplace=True)
@@ -199,15 +213,16 @@ def insert_status(conn):
     print("status inserted")
     return status_mapping
 
+
 def insert_sample_users(conn):
     cursor = conn.cursor()
-    
+
     sample_users = [
-        ('john', 'john@example.com', 'editor'),
-        ('sarah', 'sarah@example.com', 'reviewer'),
-        ('mike', 'mike@example.com', 'admin')
+        ("john", "john@example.com", "editor"),
+        ("sarah", "sarah@example.com", "reviewer"),
+        ("mike", "mike@example.com", "admin"),
     ]
-    
+
     query = """
         INSERT INTO users (username, email, role)
         VALUES %s
@@ -216,7 +231,7 @@ def insert_sample_users(conn):
 
     cursor.execute("SELECT user_id, username FROM users")
     user_mapping = {username: id for id, username in cursor.fetchall()}
-    
+
     conn.commit()
     return user_mapping
 
