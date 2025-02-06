@@ -86,6 +86,8 @@ def read_and_clean_data(paths_to_data):
         for column in ["sector", "category", "unit", "scope", "lca"]:  # Open question: activity_name ????
             df[column] = df[column].apply(lambda x: str(x).lower().rstrip())
 
+        # rounding
+         df[['kgco2e', 'kgco2', 'kgch4', 'kgn2o']] = df[['kgco2e', 'kgco2', 'kgch4', 'kgn2o']].round(5)
         # clean missing values
         df.replace(["unknown", "Unknown"], None, inplace=True)
         df.replace(["not_supplied", "not-supplied"], np.nan, inplace=True)

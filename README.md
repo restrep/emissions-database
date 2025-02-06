@@ -50,6 +50,7 @@ The database follows a **star schema** for efficiency in querying. The primary f
 - What is the priority WRITE vs READ?  (Norm vs Denorm)
 - How specific should region be? continent, contry, state....
 - For the units? probably could include conversion factors
+- Precision of the numbers? 
 - How much do we know from the source? AWS/GCP, API, email, file type, contact
 - Activity looks like it has a direct relation with sector and category
 - Simple star schema no need to overcomplicate
