@@ -79,3 +79,7 @@ By default all entries have the status 'pending_review'
     - adds review_comments
     - changes to table according to JSON
     - changes status to 'aprroved' or 'rejected' 
+
+# Schema ERD
+
+![](schema)
