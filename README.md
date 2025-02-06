@@ -82,4 +82,4 @@ By default all entries have the status 'pending_review'
 
 # Schema ERD
 
-![](schema)
+![](schema.png)
