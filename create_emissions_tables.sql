@@ -1,5 +1,5 @@
 CREATE TYPE scope_type AS ENUM ('1', '2', '3');
-CREATE TYPE assessment_report_type AS ENUM ('AR4', 'AR5', 'AR6');
+CREATE TYPE assesment_report_type AS ENUM ('AR4', 'AR5', 'AR6');
 CREATE TYPE source_type AS ENUM ('S1', 'S2', 'S3');
 
 CREATE TABLE IF NOT EXISTS activities (
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS regions (
     name TEXT
 );
 
--- sources
+-- sources   AWS/GCP, API, email, file type, contact
 CREATE TABLE IF NOT EXISTS sources (
     source_id SERIAL PRIMARY KEY,
     source_name VARCHAR(100) NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS status (
     name VARCHAR(50) NOT NULL UNIQUE,
     description TEXT,
     
-    CONSTRAINT valid_status_name CHECK (name IN ('pending_review','approved','rejected'))
+    CONSTRAINT valid_status_name CHECK (name IN ('pending_review', 'in_review', 'approved','rejected'))
 );
 
 
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS emission_factors (
     region_id INTEGER NOT NULL REFERENCES regions(region_id),
     source_id INTEGER NOT NULL REFERENCES sources(source_id),
     scope scope_type,
-    assessment_report assessment_report_type,  -- maybe also a table for reports
+    assesment_report assesment_report_type,  -- maybe also a table for reports
     validity_year INTEGER,
     lca VARCHAR(100),
     kgco2e DECIMAL(20,10),
@@ -88,27 +88,5 @@ CREATE TABLE IF NOT EXISTS change_requests (
 
     requested_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     reviewed_at TIMESTAMP WITH TIME ZONE
-    
-);
-
--- Main emission factors table
-CREATE TABLE IF NOT EXISTS emission_factors (
-    emission_factor_id SERIAL PRIMARY KEY,
-    activity_id INTEGER NOT NULL REFERENCES activities(activity_id),
-    unit_id INTEGER NOT NULL REFERENCES units(unit_id),
-    region_id INTEGER NOT NULL REFERENCES regions(region_id),
-    source_id INTEGER NOT NULL REFERENCES sources(source_id),
-    scope scope_type,
-    assessment_report assessment_report_type,  -- maybe also a table for reports
-    validity_year INTEGER,
-    lca VARCHAR(100),
-    kgco2e DECIMAL(20,10),
-    kgco2 DECIMAL(20,10),
-    kgch4 DECIMAL(20,10),
-    kgn2o DECIMAL(20,10),
-    status_id INTEGER NOT NULL REFERENCES status(status_id),
-
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     
 );
